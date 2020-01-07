@@ -36,9 +36,9 @@ RUN set -ex \
         procps-ng \
         tzdata \
 # 安装常用工具
- && yum -y install --setopt=tsflags=nodocs \
+ && yum -y install --setopt='tsflags=nodocs' \
         epel-release \
- && yum -y install --setopt=tsflags=nodocs \
+ && yum -y install --setopt='tsflags=nodocs' \
         bash-completion \
         curl \
         gettext \
