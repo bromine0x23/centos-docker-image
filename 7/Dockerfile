@@ -12,11 +12,14 @@ ENV TZ   ${LOCALE_TIMEZONE}
 ENV LANG ${LOCALE_LANGUAGE}_${LOCALE_COUNTRY}.${LOCALE_CHARMAP}
 
 RUN set -ex \
+# 设置时区
  && ln -sf /usr/share/zoneinfo/${LOCALE_TIMEZONE} /etc/localtime \
+# 设置语言环境
  && sed --in-place "s|^\(override_install_langs\s*=\s*.*\)$|\1:${LOCALE_LANGUAGE}_${LOCALE_COUNTRY}|" /etc/yum.conf \
  && yum -y reinstall \
         glibc-common \
  && sed --in-place "s|^LANG\s*=\s*\".*\"$|LANG=\"${LOCALE_LANGUAGE}_${LOCALE_COUNTRY}.${LOCALE_CHARMAP}\"|" /etc/locale.conf \
+# 安装翻译
  && yum -y reinstall \
         binutils \
         bash \
@@ -27,19 +30,26 @@ RUN set -ex \
         shadow-utils \
         tar \
         yum \
- && yum -y install epel-release --setopt=tsflags=nodocs \
+# 升级重要或者有安全漏洞的软件包
  && yum -y update \
         binutils \
         procps-ng \
         tzdata \
+# 安装常用工具
+ && yum -y install --setopt=tsflags=nodocs \
+        epel-release \
  && yum -y install --setopt=tsflags=nodocs \
         bash-completion \
         curl \
         gettext \
+        htop \
         less \
+        nano \
+        openssh-clients \
         sudo \
         telnet \
         unzip \
+        vim \
         wget \
  && yum -y clean all \
  && rm -rf /var/cache/yum
