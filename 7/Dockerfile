@@ -21,26 +21,26 @@ RUN set -ex \
  && sed --in-place "s|^LANG\s*=\s*\".*\"$|LANG=\"${LOCALE_LANGUAGE}_${LOCALE_COUNTRY}.${LOCALE_CHARMAP}\"|" /etc/locale.conf \
 # 安装翻译
  && yum -y reinstall \
-        binutils \
         bash \
+        binutils \
         coreutils \
         findutils \
         grep \
         sed \
         shadow-utils \
         tar \
+        xz \
         yum \
 # 升级重要或者有安全漏洞的软件包
  && yum -y update \
-        binutils \
-        procps-ng \
-        tzdata \
+        yum \
 # 安装常用工具
  && yum -y install --setopt='tsflags=nodocs' \
         epel-release \
  && yum -y install --setopt='tsflags=nodocs' \
         bash-completion \
-        curl \
+        bzip2 \
+        bind-utils \
         gettext \
         htop \
         less \

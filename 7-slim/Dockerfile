@@ -21,8 +21,6 @@ RUN set -ex \
  && sed --in-place "s|^LANG\s*=\s*\".*\"$|LANG=\"${LOCALE_LANGUAGE}_${LOCALE_COUNTRY}.${LOCALE_CHARMAP}\"|" /etc/locale.conf \
 # 升级重要或者有安全漏洞的软件包
  && yum -y update \
-        binutils \
-        procps-ng \
-        tzdata \
+        yum \
  && yum -y clean all \
  && rm -rf /var/cache/yum

@@ -5,11 +5,17 @@
 * 配置时区为 `Asia/Shanghai`
 * 安装常用工具
   + bash-completion
+  + bzip2
+  + bind-utils
   + curl
   + gettext
+  + htop
   + less
+  + nano
+  + openssh-clients
   + sudo
   + telnet
   + unzip
+  + vim
   + wget
 * 升级存在漏洞的软件包
