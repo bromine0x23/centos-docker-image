@@ -34,7 +34,7 @@ jobs:
           password: ${{ env.DOCKER_PASSWORD }}
           repository: ${{ github.repository }}/${{ env.IMAGE_NAME }}
           tags: ${{ env.DOCKER_TAGS }}
-          path: /github/workspace/${{ env.DOCKER_CONTEXT }}
+          dockerfile: ./${{ env.DOCKER_CONTEXT }}/Dockerfile
           labels: org.opencontainers.image.authors="${{ env.IMAGE_LABEL_AUTHORS }}",org.opencontainers.image.title="${{ env.IMAGE_LABEL_TITLE }}",org.opencontainers.image.description="${{ env.IMAGE_LABEL_DESCRIPTION }}",org.opencontainers.image.version="${{ env.IMAGE_LABEL_VERSION }}"
           add_git_labels: true
   release-centos7-slim:
@@ -55,6 +55,6 @@ jobs:
           registry: ${{ env.DOCKER_REGISTRY }}
           repository: ${{ github.repository }}/${{ env.IMAGE_NAME }}
           tags: ${{ env.DOCKER_TAGS }}
-          path: /github/workspace/${{ env.DOCKER_CONTEXT }}
+          dockerfile: ./${{ env.DOCKER_CONTEXT }}/Dockerfile
           labels: org.opencontainers.image.authors="${{ env.IMAGE_LABEL_AUTHORS }}",org.opencontainers.image.title="${{ env.IMAGE_LABEL_TITLE }}",org.opencontainers.image.description="${{ env.IMAGE_LABEL_DESCRIPTION }}",org.opencontainers.image.version="${{ env.IMAGE_LABEL_VERSION }}"
           add_git_labels: true
