@@ -7,12 +7,12 @@ on:
 
 env:
   IMAGE_NAME: centos
-  IMAGE_AUTHORS: Bromine0x23 <bromine0x23@gmail.com>
-  IMAGE_TITLE: CentOS
-  IMAGE_DESCRIPTION: CentOS 基础镜像
+  IMAGE_LABEL_AUTHORS: Bromine0x23 <bromine0x23@gmail.com>
+  IMAGE_LABEL_TITLE: CentOS
+  IMAGE_LABEL_DESCRIPTION: CentOS 基础镜像
+  DOCKER_REGISTRY: docker.pkg.github.com
   DOCKER_USERNAME: ${{ github.actor }}
   DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-  DOCKER_REGISTRY: docker.pkg.github.com
 
 jobs:
   # 参考：https://github.com/docker/build-push-action
@@ -20,37 +20,41 @@ jobs:
     name: Build and push image for CentOS 7
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: '7'
+      IMAGE_LABEL_VERSION: '7'
+      DOCKER_TAGS: '7'
+      DOCKER_CONTEXT: '7'
     steps:
       - name: 检出代码
         uses: actions/checkout@v2
       - name: 构建及发布镜像
         uses: docker/build-push-action@v1
         with:
-          username: $DOCKER_USERNAME
-          password: $DOCKER_PASSWORD
-          registry: $DOCKER_REGISTRY
-          repository: ${{ github.repository }}/$IMAGE_NAME
-          tags: '7'
-          path: '7'
-          labels: org.opencontainers.image.authors="${IMAGE_AUTHORS}",org.opencontainers.image.title="${IMAGE_TITLE}",org.opencontainers.image.description="${IMAGE_DESCRIPTION}",org.opencontainers.image.version="${IMAGE_VERSION}"
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+          repository: ${{ github.repository }}/${{ env.IMAGE_NAME }}
+          tags: ${{ env.DOCKER_TAGS }}
+          path: ${{ env.DOCKER_CONTEXT }}
+          labels: org.opencontainers.image.authors="${{ env.IMAGE_LABEL_AUTHORS }}",org.opencontainers.image.title="${{ env.IMAGE_LABEL_TITLE }}",org.opencontainers.image.description="${{ env.IMAGE_LABEL_DESCRIPTION }}",org.opencontainers.image.version="${{ env.IMAGE_LABEL_VERSION }}"
           add_git_labels: true
   release-centos7-slim:
     name: Build and push image for CentOS 7 (Slim version)
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: '7'
+      IMAGE_LABEL_VERSION: '7'
+      DOCKER_TAGS: '7-slim'
+      DOCKER_CONTEXT: '7-slim'
     steps:
       - name: 检出代码
         uses: actions/checkout@v2
       - name: 构建及发布镜像
         uses: docker/build-push-action@v1
         with:
-          username: $DOCKER_USERNAME
-          password: $DOCKER_PASSWORD
-          registry: $DOCKER_REGISTRY
-          repository: ${{ github.repository }}/$IMAGE_NAME
-          tags: '7-slim'
-          path: '7-slim'
-          labels: org.opencontainers.image.authors="${IMAGE_AUTHORS}",org.opencontainers.image.title="${IMAGE_TITLE}",org.opencontainers.image.description="${IMAGE_DESCRIPTION}",org.opencontainers.image.version="${IMAGE_VERSION}"
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+          registry: ${{ env.DOCKER_REGISTRY }}
+          repository: ${{ github.repository }}/${{ env.IMAGE_NAME }}
+          tags: ${{ env.DOCKER_TAGS }}
+          path: ${{ env.DOCKER_CONTEXT }}
+          labels: org.opencontainers.image.authors="${{ env.IMAGE_LABEL_AUTHORS }}",org.opencontainers.image.title="${{ env.IMAGE_LABEL_TITLE }}",org.opencontainers.image.description="${{ env.IMAGE_LABEL_DESCRIPTION }}",org.opencontainers.image.version="${{ env.IMAGE_LABEL_VERSION }}"
           add_git_labels: true
