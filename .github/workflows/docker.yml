@@ -25,7 +25,7 @@ jobs:
       DOCKER_CONTEXT: '7'
     steps:
       - name: 检出代码
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: 构建及发布镜像
         uses: docker/build-push-action@v1
         with:
@@ -34,7 +34,7 @@ jobs:
           password: ${{ env.DOCKER_PASSWORD }}
           repository: ${{ github.repository }}/${{ env.IMAGE_NAME }}
           tags: ${{ env.DOCKER_TAGS }}
-          path: ./${{ env.DOCKER_CONTEXT }}
+          path: /github/workspace/${{ env.DOCKER_CONTEXT }}
           labels: org.opencontainers.image.authors="${{ env.IMAGE_LABEL_AUTHORS }}",org.opencontainers.image.title="${{ env.IMAGE_LABEL_TITLE }}",org.opencontainers.image.description="${{ env.IMAGE_LABEL_DESCRIPTION }}",org.opencontainers.image.version="${{ env.IMAGE_LABEL_VERSION }}"
           add_git_labels: true
   release-centos7-slim:
@@ -46,7 +46,7 @@ jobs:
       DOCKER_CONTEXT: '7-slim'
     steps:
       - name: 检出代码
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: 构建及发布镜像
         uses: docker/build-push-action@v1
         with:
@@ -55,6 +55,6 @@ jobs:
           registry: ${{ env.DOCKER_REGISTRY }}
           repository: ${{ github.repository }}/${{ env.IMAGE_NAME }}
           tags: ${{ env.DOCKER_TAGS }}
-          path: ./${{ env.DOCKER_CONTEXT }}
+          path: /github/workspace/${{ env.DOCKER_CONTEXT }}
           labels: org.opencontainers.image.authors="${{ env.IMAGE_LABEL_AUTHORS }}",org.opencontainers.image.title="${{ env.IMAGE_LABEL_TITLE }}",org.opencontainers.image.description="${{ env.IMAGE_LABEL_DESCRIPTION }}",org.opencontainers.image.version="${{ env.IMAGE_LABEL_VERSION }}"
           add_git_labels: true
