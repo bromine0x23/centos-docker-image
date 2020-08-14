@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_LABEL_VERSION: '7'
-      DOCKER_TAGS: '7'
+      DOCKER_TAGS: '7,latest'
       DOCKER_BUILD_CONTEXT: '7'
     steps:
       - name: 检出代码
@@ -34,7 +34,7 @@ jobs:
           password: ${{ env.DOCKER_PASSWORD }}
           repository: ${{ github.repository }}/${{ env.IMAGE_NAME }}
           tags: ${{ env.DOCKER_TAGS }}
-          dockerfile: ./${{ env.DOCKER_BUILD_CONTEXT }}/Dockerfile
+          path: ./${{ env.DOCKER_BUILD_CONTEXT }}
           labels: org.opencontainers.image.authors="${{ env.IMAGE_LABEL_AUTHORS }}",org.opencontainers.image.title="${{ env.IMAGE_LABEL_TITLE }}",org.opencontainers.image.description="${{ env.IMAGE_LABEL_DESCRIPTION }}",org.opencontainers.image.version="${{ env.IMAGE_LABEL_VERSION }}"
           add_git_labels: true
   release-centos7-slim:
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_LABEL_VERSION: '7'
-      DOCKER_TAGS: '7-slim'
+      DOCKER_TAGS: '7-slim,latest-slim'
       DOCKER_BUILD_CONTEXT: '7-slim'
     steps:
       - name: 检出代码
@@ -55,6 +55,6 @@ jobs:
           registry: ${{ env.DOCKER_REGISTRY }}
           repository: ${{ github.repository }}/${{ env.IMAGE_NAME }}
           tags: ${{ env.DOCKER_TAGS }}
-          dockerfile: ./${{ env.DOCKER_BUILD_CONTEXT }}/Dockerfile
+          path: ./${{ env.DOCKER_BUILD_CONTEXT }}
           labels: org.opencontainers.image.authors="${{ env.IMAGE_LABEL_AUTHORS }}",org.opencontainers.image.title="${{ env.IMAGE_LABEL_TITLE }}",org.opencontainers.image.description="${{ env.IMAGE_LABEL_DESCRIPTION }}",org.opencontainers.image.version="${{ env.IMAGE_LABEL_VERSION }}"
           add_git_labels: true
