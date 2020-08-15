@@ -22,6 +22,6 @@ RUN set -ex \
  && sed --in-place "s|^LANG\s*=\s*\".*\"$|LANG=\"${LOCALE_LANGUAGE}_${LOCALE_COUNTRY}.${LOCALE_CHARMAP}\"|" /etc/locale.conf \
 # 升级重要的或者有安全漏洞的软件包
  && dnf -y update \
-        bash \
+        dnf \
  && dnf -y clean all \
  && rm -rf /var/cache/dnf

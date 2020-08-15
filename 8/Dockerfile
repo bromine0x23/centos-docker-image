@@ -34,13 +34,14 @@ RUN set -ex \
         xz \
 # 升级重要的或者有安全漏洞的软件包
  && dnf -y update \
-        bash \
+        dnf \
 # 安装常用工具
  && dnf -y install --setopt='tsflags=nodocs' \
         epel-release \
  && dnf -y install --setopt='tsflags=nodocs' \
         bash-completion \
-        curl \
+        bzip2 \
+        bind-utils \
         gettext \
         htop \
         less \
