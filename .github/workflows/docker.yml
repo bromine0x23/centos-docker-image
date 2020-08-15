@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_LABEL_VERSION: '7'
-      DOCKER_TAGS: '7,latest'
+      DOCKER_TAGS: 'centos7,7'
       DOCKER_BUILD_CONTEXT: '7'
     steps:
       - name: 检出代码
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_LABEL_VERSION: '7'
-      DOCKER_TAGS: '7-slim,latest-slim'
+      DOCKER_TAGS: 'centos7-slim,7-slim'
       DOCKER_BUILD_CONTEXT: '7-slim'
     steps:
       - name: 检出代码
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_LABEL_VERSION: '8'
-      DOCKER_TAGS: '8'
+      DOCKER_TAGS: 'latest,centos8,8'
       DOCKER_BUILD_CONTEXT: '8'
     steps:
       - name: 检出代码
@@ -86,7 +86,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_LABEL_VERSION: '8'
-      DOCKER_TAGS: '8-slim'
+      DOCKER_TAGS: 'latest-slim,centos8-slim,8-slim'
       DOCKER_BUILD_CONTEXT: '8-slim'
     steps:
       - name: 检出代码
