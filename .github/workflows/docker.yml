@@ -15,7 +15,7 @@ env:
   #DOCKER_REPOSITORY: ${{ github.repository }}/centos
   DOCKER_REGISTRY: docker.io
   DOCKER_REPOSITORY: bromine0x23/centos
-  DOCKER_LABELS: org.opencontainers.image.authors="${{ env.IMAGE_LABEL_AUTHORS }}",org.opencontainers.image.title="${{ env.IMAGE_LABEL_TITLE }}",org.opencontainers.image.description="${{ env.IMAGE_LABEL_DESCRIPTION }}",org.opencontainers.image.version="${{ env.IMAGE_LABEL_VERSION }}"
+  DOCKER_LABELS: org.opencontainers.image.authors="${IMAGE_LABEL_AUTHORS}",org.opencontainers.image.title="${IMAGE_LABEL_TITLE}",org.opencontainers.image.description="${IMAGE_LABEL_DESCRIPTION}",org.opencontainers.image.version="${IMAGE_LABEL_VERSION}"
 
 jobs:
   # See: https://github.com/docker/build-push-action
