@@ -3,7 +3,9 @@ name: Docker
 on:
   push:
     branches:
-    - master
+      - master
+  schedule:
+    - cron:  '0 8 ? 1/1 1 *'
 
 env:
   IMAGE_LABEL_AUTHORS: Bromine0x23 <bromine0x23@gmail.com>
