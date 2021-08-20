@@ -51,11 +51,11 @@ jobs:
         fi
         
         echo 'DOCKER_TAGS<<EOF' >> $GITHUB_ENV
-        echo    "${{ env.DOCKERHUB_REPOSITORY }}:${{ env.VERSION }}${SUFFIX}" >> $GITHUB_ENV
-        echo "ghcr.io/${{ env.GHCR_REPOSITORY }}:${{ env.VERSION }}${SUFFIX}" >> $GITHUB_ENV
+        echo    "${{ env.DOCKERHUB_REPOSITORY }}:${{ env.VERSION }}${SUFFIX}" >> $GITHUB_ENV; echo ""
+        echo "ghcr.io/${{ env.GHCR_REPOSITORY }}:${{ env.VERSION }}${SUFFIX}" >> $GITHUB_ENV; echo ""
         if [ "${LATEST_VERSION}" == "${{ env.VERSION }}"" ]; then
-          echo    "${{ env.DOCKERHUB_REPOSITORY }}:latest${SUFFIX}" >> $GITHUB_ENV
-          echo "ghcr.io/${{ env.GHCR_REPOSITORY }}:latest${SUFFIX}" >> $GITHUB_ENV
+          echo    "${{ env.DOCKERHUB_REPOSITORY }}:latest${SUFFIX}" >> $GITHUB_ENV; echo ""
+          echo "ghcr.io/${{ env.GHCR_REPOSITORY }}:latest${SUFFIX}" >> $GITHUB_ENV; echo ""
         fi
         echo 'EOF' >> $GITHUB_ENV
     - name: 构建及发布镜像
