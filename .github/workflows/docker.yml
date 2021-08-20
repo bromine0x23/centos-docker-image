@@ -102,12 +102,4 @@ jobs:
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
         ignore-unfixed: true
-        format: 'template'
-        template: '@/contrib/sarif.tpl'
-        output: 'trivy-results.sarif'
-    - name: 上传漏洞报告
-      id: upload-sarif
-      uses: github/codeql-action/upload-sarif@v1
-      if: ${{ fromJSON(steps.setup.outputs.enable_scan) }}
-      with:
-        sarif_file: 'trivy-results.sarif'
+        format: 'table'
