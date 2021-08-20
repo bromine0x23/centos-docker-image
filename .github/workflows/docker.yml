@@ -1,4 +1,4 @@
-name: Docker
+name: 镜像构建
 
 on:
   push:
@@ -95,6 +95,7 @@ jobs:
         image-ref: '${{ env.IMAGE_REPOSITORY_DOCKERHUB }}:${{ env.IMAGE_TAG }}'
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
+        ignore-unfixed: true
         format: 'template'
         template: '@/contrib/sarif.tpl'
         output: 'trivy-results.sarif'
