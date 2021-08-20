@@ -69,7 +69,7 @@ jobs:
       with:
         context: ./${{ env.VERSION }}
         build-args: |
-          BASE_IMAGE=centos:${{ env.DOCKER_BUILD_ARG_BASE_IMAGE }}
+          BASE_IMAGE=${{ env.DOCKER_BUILD_ARG_BASE_IMAGE }}
           IS_SLIM=${{ env.DOCKER_BUILD_ARG_IS_SLIM }}
         labels: |
           org.opencontainers.image.authors="${{ env.AUTHORS }}"
