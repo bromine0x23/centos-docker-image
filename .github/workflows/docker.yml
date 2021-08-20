@@ -12,7 +12,7 @@ env:
   PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
-  release:
+  centos:
     name: CentOS
     runs-on: ubuntu-latest
     strategy:
@@ -28,17 +28,22 @@ jobs:
       TITLE: CentOS
     steps:
     - name: 检出代码
+      id: checkout
       uses: actions/checkout@v2
     - name: 设置 QEMU
+      id: setup_qemu
       uses: docker/setup-qemu-action@v1
     - name: 设置 Docker Buildx
+      id: setup_buildx
       uses: docker/setup-buildx-action@v1
     - name: 登录 Docker Hub
+      id: login_dockerhub
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: 登录 GitHub Container Registry
+      id: login_ghcr
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
@@ -65,6 +70,7 @@ jobs:
           echo "DOCKER_BUILD_ARG_IS_SLIM=slim" >> $GITHUB_ENV
         fi
     - name: 构建及发布镜像
+      id: build_push
       uses: docker/build-push-action@v2
       with:
         context: ./${{ env.VERSION }}
@@ -78,3 +84,18 @@ jobs:
         platforms: ${{ env.PLATFORMS }}
         push: true
         tags: ${{ env.DOCKER_TAGS }}
+      - name: 漏洞扫描
+        id: trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'ghcr.io/${{ env.GHCR_REPOSITORY }}@sha256:${{ steps.build_push.outputs.digest }}'
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+      - name: 上传漏洞报告
+        id: upload-sarif
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
