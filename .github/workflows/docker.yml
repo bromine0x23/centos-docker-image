@@ -88,7 +88,7 @@ jobs:
       id: trivy
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'ghcr.io/${{ env.GHCR_REPOSITORY }}@sha256:${{ steps.build_push.outputs.digest }}'
+        image-ref: 'ghcr.io/${{ env.GHCR_REPOSITORY }}@${{ steps.build_push.outputs.digest }}'
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
         format: 'template'
