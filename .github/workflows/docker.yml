@@ -54,7 +54,7 @@ jobs:
         echo 'DOCKER_TAGS<<EOF' >> $GITHUB_ENV
         echo    "${{ env.DOCKERHUB_REPOSITORY }}:${{ env.VERSION }}${SUFFIX}" >> $GITHUB_ENV; echo ""
         echo "ghcr.io/${{ env.GHCR_REPOSITORY }}:${{ env.VERSION }}${SUFFIX}" >> $GITHUB_ENV; echo ""
-        if [ "${VARIANT}" == "${LATEST_VERSION}" ]; then
+        if [ "${VERSION}" == "${LATEST_VERSION}" ]; then
           echo    "${{ env.DOCKERHUB_REPOSITORY }}:latest${SUFFIX}" >> $GITHUB_ENV; echo ""
           echo "ghcr.io/${{ env.GHCR_REPOSITORY }}:latest${SUFFIX}" >> $GITHUB_ENV; echo ""
         fi
