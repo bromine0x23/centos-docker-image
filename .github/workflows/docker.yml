@@ -42,6 +42,7 @@ jobs:
     - name: 设置变量
       id: variables
       run: |
+        export VERSION="${{ env.VERSION }}"
         export VARIANT="${{ env.VARIANT }}"
         export LATEST_VERSION="${{ env.LATEST_VERSION }}"
         
@@ -53,7 +54,7 @@ jobs:
         echo 'DOCKER_TAGS<<EOF' >> $GITHUB_ENV
         echo    "${{ env.DOCKERHUB_REPOSITORY }}:${{ env.VERSION }}${SUFFIX}" >> $GITHUB_ENV; echo ""
         echo "ghcr.io/${{ env.GHCR_REPOSITORY }}:${{ env.VERSION }}${SUFFIX}" >> $GITHUB_ENV; echo ""
-        if [ "${LATEST_VERSION}" == "${{ env.VERSION }}"" ]; then
+        if [ "${VARIANT}" == "${LATEST_VERSION}" ]; then
           echo    "${{ env.DOCKERHUB_REPOSITORY }}:latest${SUFFIX}" >> $GITHUB_ENV; echo ""
           echo "ghcr.io/${{ env.GHCR_REPOSITORY }}:latest${SUFFIX}" >> $GITHUB_ENV; echo ""
         fi
