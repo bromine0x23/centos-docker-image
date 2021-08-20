@@ -48,6 +48,16 @@ RUN set -ex \
 # 升级重要的或者有安全漏洞的软件包
  && dnf -y update \
         dnf \
+        bash \
+        binutils \
+        gawk \
+        glib2 \
+        gnutls \
+        gzip \
+        libxml2 \
+        lz4-libs \
+        nettle \
+        openssl-libs \
 # 安装常用工具
  && if [ "${IS_SLIM}" == '' ]; then \
        dnf -y install --nodocs --setopt='tsflags=nodocs' --setopt='install_weak_deps=False' \
