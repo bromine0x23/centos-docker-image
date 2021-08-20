@@ -47,6 +47,8 @@ RUN set -ex \
 # 升级重要或者有安全漏洞的软件包
  && yum -y update \
         yum \
+        glib2 \
+        openssl-libs \
 # 安装常用工具
 # 安装常用工具
  && if [ "${IS_SLIM}" == '' ]; then \
