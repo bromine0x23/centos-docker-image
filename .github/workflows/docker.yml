@@ -65,7 +65,7 @@ jobs:
         context: ./${{ env.VERSION }}
         build-args: |
           BASE_IMAGE=centos:${{ env.VERSION }}
-          IS_SLIM=${{ env.IS_SLIM }}
+          IS_SLIM=${{ env.DOCKER_BUILD_ARG_IS_SLIM }}
         labels: |
           org.opencontainers.image.authors="Bromine0x23 <bromine0x23@gmail.com>"
           org.opencontainers.image.title="CentOS"
