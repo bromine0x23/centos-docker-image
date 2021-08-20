@@ -58,8 +58,8 @@ jobs:
 
         export IMAGE_TAG="${{ env.IMAGE_VERSION }}${IMAGE_VARIANT:+-${IMAGE_VARIANT}}"
         
-        echo 'IMAGE_TAG=${IMAGE_TAG}'>> $GITHUB_ENV
-        echo 'IMAGE_TAGS<<EOF'       >> $GITHUB_ENV
+        echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+        echo "IMAGE_TAGS<<EOF"        >> $GITHUB_ENV
         echo "${{ env.IMAGE_REPOSITORY_DOCKERHUB }}:${IMAGE_TAG}" >> $GITHUB_ENV; echo ""
         echo "${{ env.IMAGE_REPOSITORY_GHCR      }}:${IMAGE_TAG}" >> $GITHUB_ENV; echo ""
         if [ "${IMAGE_VERSION}" == "${CENTOS_VERSION_LATEST}" ]; then
