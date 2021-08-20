@@ -30,27 +30,8 @@ jobs:
     - name: 检出代码
       id: checkout
       uses: actions/checkout@v2
-    - name: 设置 QEMU
-      id: setup_qemu
-      uses: docker/setup-qemu-action@v1
-    - name: 设置 Docker Buildx
-      id: setup_buildx
-      uses: docker/setup-buildx-action@v1
-    - name: 登录 Docker Hub
-      id: login_dockerhub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: 登录 GitHub Container Registry
-      id: login_ghcr
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    - name: 设置变量
-      id: variables
+    - name: 设置
+      id: setup
       run: |
         export IMAGE_VERSION="${{ env.IMAGE_VERSION }}"
         export IMAGE_VARIANT="${{ env.IMAGE_VARIANT }}"
@@ -73,6 +54,30 @@ jobs:
         if [ "${IMAGE_VARIANT}" == "slim" ]; then
           echo "IMAGE_BUILD_ARG_IS_SLIM=slim" >> $GITHUB_ENV
         fi
+        if [ "${IMAGE_VARIANT}" == "" ]; then
+          echo "::set-output name=enable_scan::true"
+        else
+          echo "::set-output name=enable_scan::false"
+        fi
+    - name: 设置 QEMU
+      id: setup_qemu
+      uses: docker/setup-qemu-action@v1
+    - name: 设置 Docker Buildx
+      id: setup_buildx
+      uses: docker/setup-buildx-action@v1
+    - name: 登录 Docker Hub
+      id: login_dockerhub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: 登录 GitHub Container Registry
+      id: login_ghcr
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: 构建及发布镜像
       id: build_push
       uses: docker/build-push-action@v2
@@ -91,6 +96,7 @@ jobs:
     - name: 漏洞扫描
       id: trivy
       uses: aquasecurity/trivy-action@master
+      if: ${{ steps.setup.outputs.enable_scan }}
       with:
         image-ref: '${{ env.IMAGE_REPOSITORY_DOCKERHUB }}:${{ env.IMAGE_TAG }}'
         vuln-type: 'os,library'
@@ -102,5 +108,6 @@ jobs:
     - name: 上传漏洞报告
       id: upload-sarif
       uses: github/codeql-action/upload-sarif@v1
+      if: ${{ steps.setup.outputs.enable_scan }}
       with:
         sarif_file: 'trivy-results.sarif'
