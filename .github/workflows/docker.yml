@@ -5,60 +5,21 @@ on:
     branches:
     - master
   schedule:
-  - cron:  '0 8 * 1/1 1'
+  - cron:  '0 0 1 * *'
 
 env:
   IMAGE_AUTHORS: Bromine0x23 <bromine0x23@gmail.com>
   IMAGE_PLATFORMS: linux/amd64,linux/arm64
-  CENTOS_VERSION_LATEST: 8
 
 jobs:
-  centos:
+  template:
     name: CentOS
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        CENTOS_VERSION: [7, 8]
-        IMAGE_VARIANT: ['', 'slim']
-    env:
-      IMAGE_REPOSITORY_DOCKERHUB: bromine0x23/centos
-      IMAGE_REPOSITORY_GHCR: ghcr.io/${{ github.repository_owner }}/centos
-      IMAGE_TITLE: CentOS
-      IMAGE_VERSION: ${{ matrix.CENTOS_VERSION }}
-      IMAGE_VARIANT: ${{ matrix.IMAGE_VARIANT }}
-    steps:
+    if: ${{ false }}
+    steps: &steps
     - name: 检出代码
       id: checkout
       uses: actions/checkout@v2
-    - name: 设置
-      id: setup
-      run: |
-        export IMAGE_VERSION="${{ env.IMAGE_VERSION }}"
-        export IMAGE_VARIANT="${{ env.IMAGE_VARIANT }}"
-        export CENTOS_VERSION_LATEST="${{ env.CENTOS_VERSION_LATEST }}"
-
-        export IMAGE_TAG="${{ env.IMAGE_VERSION }}${IMAGE_VARIANT:+-${IMAGE_VARIANT}}"
-        
-        echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
-        echo "IMAGE_TAGS<<EOF"        >> $GITHUB_ENV
-        echo "${{ env.IMAGE_REPOSITORY_DOCKERHUB }}:${IMAGE_TAG}" >> $GITHUB_ENV; echo ""
-        echo "${{ env.IMAGE_REPOSITORY_GHCR      }}:${IMAGE_TAG}" >> $GITHUB_ENV; echo ""
-        if [ "${IMAGE_VERSION}" == "${CENTOS_VERSION_LATEST}" ]; then
-          export IMAGE_TAG_LATEST="${IMAGE_VARIANT:-latest}"
-          echo "${{ env.IMAGE_REPOSITORY_DOCKERHUB }}:${IMAGE_TAG_LATEST}" >> $GITHUB_ENV; echo ""
-          echo "${{ env.IMAGE_REPOSITORY_GHCR      }}:${IMAGE_TAG_LATEST}" >> $GITHUB_ENV; echo ""
-        fi
-        echo 'EOF' >> $GITHUB_ENV
-        
-        echo "IMAGE_BUILD_ARG_BASE_IMAGE=centos:${{ env.IMAGE_VERSION }}" >> $GITHUB_ENV
-        if [ "${IMAGE_VARIANT}" == "slim" ]; then
-          echo "IMAGE_BUILD_ARG_IS_SLIM=slim" >> $GITHUB_ENV
-        fi
-        if [ "${IMAGE_VARIANT}" == "" ]; then
-          echo "::set-output name=enable_scan::${{ toJSON(true) }}"
-        else
-          echo "::set-output name=enable_scan::${{ toJSON(false) }}"
-        fi
     - name: 设置 QEMU
       id: setup_qemu
       uses: docker/setup-qemu-action@v1
@@ -82,10 +43,8 @@ jobs:
       id: build_push
       uses: docker/build-push-action@v2
       with:
-        context: ./${{ env.IMAGE_VERSION }}
-        build-args: |
-          BASE_IMAGE=${{ env.IMAGE_BUILD_ARG_BASE_IMAGE }}
-             IS_SLIM=${{ env.IMAGE_BUILD_ARG_IS_SLIM    }}
+        context: ./${{ env.IMAGE_CONTEXT }}
+        build-args: ${{ env.IMAGE_BUILD_ARGS }}
         labels: |
           org.opencontainers.image.authors="${{ env.IMAGE_AUTHORS }}"
           org.opencontainers.image.title="${{   env.IMAGE_TITLE   }}"
@@ -96,10 +55,55 @@ jobs:
     - name: 漏洞扫描
       id: trivy
       uses: aquasecurity/trivy-action@master
-      if: ${{ fromJSON(steps.setup.outputs.enable_scan) }}
       with:
         image-ref: '${{ env.IMAGE_REPOSITORY_DOCKERHUB }}:${{ env.IMAGE_TAG }}'
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
         ignore-unfixed: true
         format: 'table'
+
+  centos:
+    name: CentOS
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CENTOS_VERSION: [7, 8]
+        IMAGE_VARIANT: ['', 'slim']
+    env:
+      CENTOS_VERSION_LATEST: 8
+      IMAGE_REPOSITORY_DOCKERHUB: bromine0x23/centos
+      IMAGE_REPOSITORY_GHCR: ghcr.io/${{ github.repository_owner }}/centos
+      IMAGE_TITLE: CentOS
+      IMAGE_VERSION: ${{ matrix.CENTOS_VERSION }}
+      IMAGE_VARIANT: ${{ matrix.IMAGE_VARIANT }}
+    steps:
+    - name: 设置
+      id: setup
+      run: |
+        export IMAGE_VERSION="${{ env.IMAGE_VERSION }}"
+        export IMAGE_VARIANT="${{ env.IMAGE_VARIANT }}"
+        export CENTOS_VERSION_LATEST="${{ env.CENTOS_VERSION_LATEST }}"
+        
+        echo "IMAGE_CONTEXT=${{ env.IMAGE_VERSION }}"        >> $GITHUB_ENV
+        
+        echo "IMAGE_BUILD_ARGS<<EOF"        >> $GITHUB_ENV
+        echo "BASE_IMAGE=centos:${{ env.IMAGE_VERSION }}" >> $GITHUB_ENV; echo ""
+        if [ "${IMAGE_VARIANT}" == "slim" ]; then
+          echo "IS_SLIM=slim" >> $GITHUB_ENV; echo ""
+        else
+          echo "IS_SLIM="     >> $GITHUB_ENV; echo ""
+        fi
+        echo 'EOF' >> $GITHUB_ENV
+        
+        export IMAGE_TAG="${{ env.IMAGE_VERSION }}${IMAGE_VARIANT:+-${IMAGE_VARIANT}}"
+        echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+        echo "IMAGE_TAGS<<EOF"        >> $GITHUB_ENV
+        echo "${{ env.IMAGE_REPOSITORY_DOCKERHUB }}:${IMAGE_TAG}" >> $GITHUB_ENV; echo ""
+        echo "${{ env.IMAGE_REPOSITORY_GHCR      }}:${IMAGE_TAG}" >> $GITHUB_ENV; echo ""
+        if [ "${IMAGE_VERSION}" == "${CENTOS_VERSION_LATEST}" ]; then
+          export IMAGE_TAG_LATEST="${IMAGE_VARIANT:-latest}"
+          echo "${{ env.IMAGE_REPOSITORY_DOCKERHUB }}:${IMAGE_TAG_LATEST}" >> $GITHUB_ENV; echo ""
+          echo "${{ env.IMAGE_REPOSITORY_GHCR      }}:${IMAGE_TAG_LATEST}" >> $GITHUB_ENV; echo ""
+        fi
+        echo 'EOF' >> $GITHUB_ENV
+    <<: *steps
